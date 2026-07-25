@@ -59,6 +59,18 @@ input, textarea, select, button { font-family: inherit; }
 .nav-links a { color: rgba(242,239,233,.62); padding-bottom: 3px; border-bottom: 1px solid transparent; transition: color .3s ease, border-color .3s ease; }
 .nav-links a:hover { color: var(--ink); }
 .nav-links a.active { color: var(--gold-hi); border-bottom-color: rgba(201,162,74,.7); }
+.rnav-burger { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 40px; height: 40px; background: transparent; border: none; cursor: pointer; padding: 0; }
+.rnav-burger span { display: block; width: 22px; height: 1.5px; background: var(--ink); }
+@media (max-width: 768px) { .rnav-links { display: none !important; } .rnav-burger { display: flex !important; } }
+
+/* ---------- Mobile fullscreen menu ---------- */
+.rnav-mobile { position: fixed; inset: 0; z-index: 60; background: rgba(8,7,5,.98); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: flex; flex-direction: column; animation: tkn-fade .3s ease; }
+.rnav-mobile-top { display: flex; align-items: center; justify-content: space-between; padding: 22px 24px; border-bottom: 1px solid rgba(201,162,74,.14); }
+.rnav-mobile-close { width: 40px; height: 40px; background: transparent; border: 1px solid rgba(242,239,233,.2); color: var(--ink); font-size: 20px; cursor: pointer; border-radius: 50%; line-height: 1; }
+.rnav-mobile-links { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 0 30px; }
+.rnav-mobile-links a { font-family: var(--serif); font-weight: 300; font-size: 40px; line-height: 1.5; color: var(--ink); letter-spacing: -.01em; }
+.rnav-mobile-links a.active { color: var(--gold-hi); }
+.rnav-mobile-foot { padding: 26px 30px; border-top: 1px solid rgba(242,239,233,.1); display: flex; gap: 24px; font-family: var(--mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; }
 
 /* ---------- Scroll view shell ---------- */
 .view { position: absolute; inset: 0; z-index: 20; overflow-y: auto; background: var(--bg); animation: tkn-fade .5s ease; }

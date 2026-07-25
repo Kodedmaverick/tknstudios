@@ -1,11 +1,13 @@
 # Nixpacks build config for TKN Studios (Vite + React static site).
-# Builds to /dist and serves it statically. Works on Railway, Coolify, and any
-# Nixpacks-based host. `npm run preview` is Vite's static server bound to $PORT.
+# Builds to /dist. Served statically via Caddy (production-grade static file
+# server), NOT `vite preview` — vite preview is a dev tool, not meant for
+# production, and its Host-header allowlist rejects requests coming through
+# a reverse proxy/custom domain, which is what causes 502 Bad Gateway here.
 
 providers = ["node"]
 
 [phases.setup]
-nixPkgs = ["nodejs_20"]
+nixPkgs = ["nodejs_20", "caddy"]
 
 [phases.install]
 cmds = ["npm ci"]
@@ -13,5 +15,8 @@ cmds = ["npm ci"]
 [phases.build]
 cmds = ["npm run build"]
 
+[staticAssets]
+"Caddyfile" = ':{$PORT} {\n\troot * /app/dist\n\tencode gzip\n\ttry_files {path} /index.html\n\tfile_server\n}\n'
+
 [start]
-cmd = "npm run preview -- --host 0.0.0.0 --port $PORT"
+cmd = "caddy run --config /app/Caddyfile --adapter caddyfile 2>&1"
