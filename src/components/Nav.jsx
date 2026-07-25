@@ -8,9 +8,7 @@ export default function Nav({ nav, view, go }) {
     <>
       <nav className="nav rnav">
         <div className="nav-logo" onClick={pick('wall')}>
-          <span className="mark">TKN</span>
-          <span className="div" />
-          <span className="sub">Studios</span>
+          <img src="/logo.png" alt="TKN Studios" className="nav-logo-img" />
         </div>
         <div className="nav-links rnav-links">
           {nav.map(([label, v]) => (
@@ -28,9 +26,7 @@ export default function Nav({ nav, view, go }) {
         <div className="rnav-mobile">
           <div className="rnav-mobile-top">
             <div className="nav-logo">
-              <span className="mark">TKN</span>
-              <span className="div" />
-              <span className="sub">Studios</span>
+              <img src="/logo.png" alt="TKN Studios" className="nav-logo-img" style={{ height: 30 }} />
             </div>
             <button className="rnav-mobile-close" aria-label="Close" onClick={() => setOpen(false)}>×</button>
           </div>

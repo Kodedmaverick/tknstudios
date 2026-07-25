@@ -1,7 +1,7 @@
 // TKN Studios — content data. Swap `src` values for real files in /public/photos.
 
 export const CATS = ['All', 'Portraits', 'Fashion', 'Beauty', 'Editorial', 'Glamour'];
-export const ART_CATS = ['All', 'Face Painting', 'Body Art', 'Makeup Art'];
+export const ART_CATS = ['All', 'Face Painting', 'Body Art', 'Makeup Art', 'Paintings'];
 
 const raw = [
   { src: '/photos/p01.jpg', cat: 'Beauty',    title: 'Gilded',      year: '2024', location: 'TKN Studio, Lagos', mood: 'Warm · Radiant',    color: '#c9a24a', client: 'Studio Editorial' },
@@ -36,19 +36,43 @@ const art = [
   { src: '/photos/va05.jpg', title: 'Bronze Tears',   mood: 'Dramatic · Dark',     color: '#6b4a1f', client: 'Face Painting' },
   { src: '/photos/va06.jpg', title: 'Gold Repose',    mood: 'Serene · Luxe',       color: '#1f4a55', client: 'Face Painting' },
   { src: '/photos/va07.jpg', title: 'Two Faces',      mood: 'Duality · Striking',  color: '#6b2530', client: 'Face Painting' },
-  { src: '/photos/va08.jpg', title: 'Crystal Skin',   mood: 'Ethereal · Neon',     color: '#3a2a55', client: 'Body Art' },
+  { src: '/photos/va08.jpg', title: 'Crystal Skin',   mood: 'Ethereal · Neon',     color: '#3a2a55', client: 'Makeup Art' },
   { src: '/photos/va09.jpg', title: 'Cobalt Profile', mood: 'Luminous · Deep',     color: '#2a2a6b', client: 'Body Art' },
-  { src: '/photos/va10.jpg', title: 'Split Muse',     mood: 'Bold · Editorial',    color: '#2a4a5a', client: 'Makeup Art' },
   { src: '/photos/va11.jpg', title: 'Adire Markings', mood: 'Cultural · Radiant',  color: '#6b5a2a', client: 'Body Art' },
+  { src: '/photos/fp01.jpg', title: 'Aqua Adorned', mood: 'Regal · Beaded',   color: '#2f6f70', client: 'Face Painting' },
+  { src: '/photos/fp02.jpg', title: 'Neon Bloom',   mood: 'Vivid · Electric', color: '#9b3b3a', client: 'Face Painting' },
+  { src: '/photos/fp03.jpg', title: 'White Marks',  mood: 'Joyful · Graphic', color: '#4a4a52', client: 'Face Painting' },
+  { src: '/photos/fp04.jpg', title: 'Gilded Veil',  mood: 'Regal · Golden',   color: '#8a6a2a', client: 'Face Painting' },
+  { src: '/photos/pt01.jpg', title: 'Meridian',         mood: 'Abstract · Cobalt', color: '#2a3a6b', client: 'Paintings' },
+  { src: '/photos/pt02.jpg', title: 'Monochrome Bloom', mood: 'Graphic · Mono',   color: '#4a4a4a', client: 'Paintings' },
+  { src: '/photos/pt03.jpg', title: 'Ivory Swirl',      mood: 'Golden · Kinetic', color: '#8a6a2a', client: 'Paintings' },
+  { src: '/photos/pt04.jpg', title: 'Golden Orbit',     mood: 'Radiant · Warm',   color: '#7a5a2a', client: 'Paintings' },
+  { src: '/photos/pt05.jpg', title: 'Ceremony',         mood: 'Cultural · Rich',  color: '#6b2a2a', client: 'Paintings' },
+  { src: '/photos/pt06.jpg', title: 'Spectrum',         mood: 'Vivid · Rainbow',  color: '#3a6b6b', client: 'Paintings' },
+  { src: '/photos/pt07.jpg', title: 'Duality',          mood: 'Blue · Red',       color: '#2a2a6b', client: 'Paintings' },
+  { src: '/photos/pt08.jpg', title: 'Nightfall',        mood: 'Deep · Blue',      color: '#1f2a55', client: 'Paintings' },
+  { src: '/photos/pt09.jpg', title: 'Ember Field',      mood: 'Fiery · Red',      color: '#7a2a2a', client: 'Paintings' },
+  { src: '/photos/pt10.jpg', title: 'Terracotta Flow',  mood: 'Earthy · Warm',    color: '#8a4a2a', client: 'Paintings' },
+  { src: '/photos/pt11.jpg', title: 'Cascade',          mood: 'Fluid · Green',    color: '#3a6b4a', client: 'Paintings' },
+  { src: '/photos/pt12.jpg', title: 'Indigo Depth',     mood: 'Moody · Indigo',   color: '#2a3a5a', client: 'Paintings' },
+  { src: '/photos/pt13.jpg', title: 'Crimson Drift',    mood: 'Red · Abstract',   color: '#7a2a3a', client: 'Paintings' },
+  { src: '/photos/pt14.jpg', title: 'Verdant',          mood: 'Green · Organic',  color: '#3a5a3a', client: 'Paintings' },
+  { src: '/photos/pt15.jpg', title: 'Gilded Muse',      mood: 'Golden · Figure',  color: '#8a6a2a', client: 'Paintings' },
+  { src: '/photos/pt16.jpg', title: 'Ancestor',         mood: 'Cultural · Gold',  color: '#6b5a2a', client: 'Paintings' },
+  { src: '/photos/pt17.jpg', title: 'Nova',             mood: 'Cosmic · Fiery',   color: '#6b2a3a', client: 'Paintings' },
+  { src: '/photos/pt18.jpg', title: 'Rift',             mood: 'Blue · Fault',     color: '#2a3a6b', client: 'Paintings' },
+  { src: '/photos/pt19.jpg', title: 'Chroma',           mood: 'Bold · Colour',    color: '#4a3a6b', client: 'Paintings' },
 ];
 
 export const VISUAL_ART = art.map((p, i) => ({
   ...p,
   cat: 'Visual Art',
   year: '2025',
-  location: 'TKN Studio, Lagos',
+  location: p.client === 'Paintings' ? 'Original · Acrylic' : 'TKN Studio, Lagos',
   num: String(i + 1).padStart(2, '0'),
-  desc: `${p.title} — visual art, ${p.mood.toLowerCase()}, conceived and shot at TKN Studio. Skin and colour as canvas.`,
+  desc: p.client === 'Paintings'
+    ? `${p.title} — an original ${p.mood.toLowerCase()} work by TKN Studios, shown in situ.`
+    : `${p.title} — visual art, ${p.mood.toLowerCase()}, conceived and shot at TKN Studio. Skin and colour as canvas.`,
 }));
 
 // Combined list used only for lightbox indexing (gallery + visual art).

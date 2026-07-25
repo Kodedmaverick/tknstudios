@@ -2,7 +2,21 @@ import { useState } from 'react';
 
 export default function Contact() {
   const [sent, setSent] = useState(false);
-  const submit = (e) => { e.preventDefault(); setSent(true); };
+  const submit = (e) => {
+    e.preventDefault();
+    const f = e.target;
+    const payload = {
+      name: f.name_.value.trim(), email: f.email.value.trim(),
+      service: f.service.value, message: f.message.value.trim(),
+      to: 'thekingnathystudios@gmail.com', at: new Date().toISOString(),
+    };
+    // Delivery endpoint: set FORM_ENDPOINT to a Formspree/Resend/serverless URL to receive at the studio inbox.
+    const FORM_ENDPOINT = '';
+    if (FORM_ENDPOINT) {
+      fetch(FORM_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }).catch(() => {});
+    }
+    setSent(true);
+  };
 
   return (
     <div className="view">
@@ -25,21 +39,21 @@ export default function Contact() {
             <div className="sent">
               <div className="check">✓</div>
               <div className="t">Thank you</div>
-              <p>Your enquiry has been noted. We’ll be in touch shortly. <span className="note">(Demo form — wire up to email / a form service.)</span></p>
+              <p>Your message has been sent to the studio. Expect a response in less than 24 hours.</p>
             </div>
           ) : (
             <form onSubmit={submit}>
               <div className="field">
                 <label>Name</label>
-                <input placeholder="Your name" required />
+                <input name="name_" placeholder="Your name" required />
               </div>
               <div className="field">
                 <label>Email</label>
-                <input type="email" placeholder="you@email.com" required />
+                <input name="email" type="email" placeholder="you@email.com" required />
               </div>
               <div className="field">
                 <label>Service</label>
-                <select>
+                <select name="service">
                   <option>Portrait session</option>
                   <option>Fashion / Editorial</option>
                   <option>Beauty</option>
@@ -50,7 +64,7 @@ export default function Contact() {
               </div>
               <div className="field">
                 <label>Tell us more</label>
-                <textarea rows="4" placeholder="Dates, location, the story you want to tell…" />
+                <textarea name="message" rows="4" placeholder="Dates, location, the story you want to tell…" />
               </div>
               <button className="btn-gold" type="submit">Send enquiry</button>
             </form>

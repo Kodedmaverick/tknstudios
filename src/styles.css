@@ -60,6 +60,9 @@ input, textarea, select, button { font-family: inherit; }
 .nav-links a:hover { color: var(--ink); }
 .nav-links a.active { color: var(--gold-hi); border-bottom-color: rgba(201,162,74,.7); }
 .rnav-burger { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 40px; height: 40px; background: transparent; border: none; cursor: pointer; padding: 0; position: relative; z-index: 41; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.nav-logo-img { height: 34px; width: auto; display: block; }
+.music-toggle { position: fixed; bottom: 22px; left: 22px; z-index: 45; display: flex; align-items: center; gap: 9px; padding: 10px 15px; background: rgba(12,10,8,.6); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(201,162,74,.3); border-radius: 30px; color: var(--ink); cursor: pointer; font-family: var(--mono); font-size: 9px; letter-spacing: .22em; text-transform: uppercase; }
+.music-toggle .note { font-size: 13px; line-height: 1; color: var(--gold); }
 .rnav-burger span { display: block; width: 22px; height: 1.5px; background: var(--ink); }
 @media (max-width: 768px) { .rnav-links { display: none !important; } .rnav-burger { display: flex !important; } }
 

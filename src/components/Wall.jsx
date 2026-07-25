@@ -41,7 +41,8 @@ export default function Wall({ active, filter, setFilter, onOpenDetail, onOpenRe
     const loader = new THREE.TextureLoader();
 
     // Shuffle images so categories aren't grouped, then sprinkle in video tiles.
-    const imgs = [...PHOTOS, ...VISUAL_ART];
+    const seen = new Set();
+    const imgs = [...PHOTOS, ...VISUAL_ART].filter((p) => { if (seen.has(p.src)) return false; seen.add(p.src); return true; });
     for (let a = imgs.length - 1; a > 0; a--) { const b = Math.floor(Math.random() * (a + 1)); [imgs[a], imgs[b]] = [imgs[b], imgs[a]]; }
     const videoPicks = isMobile ? [] : WALL_VIDEOS.filter(Boolean).map((f) => ({ ...f, isVideo: true, cat: f.type, color: '#14100b' }));
     const items = imgs.slice();
@@ -49,25 +50,29 @@ export default function Wall({ active, filter, setFilter, onOpenDetail, onOpenRe
 
     items.forEach((g, i) => {
       const col = i % cols, row = Math.floor(i / cols);
-      const geo = new THREE.PlaneGeometry(1.55, 1.98);
+      const H = 1.98;
+      const geo = new THREE.PlaneGeometry(1, H);
       const mat = new THREE.MeshBasicMaterial({ color: new THREE.Color(g.color || '#14100b'), transparent: true, opacity: 1 });
       if (g.isVideo) {
+        if (g.poster) loader.load(g.poster, (t) => { if (!(mat.map && mat.map.isVideoTexture)) { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; mat.map = t; mat.color.set(0xffffff); mat.needsUpdate = true; } if (t.image) mesh.userData.aspectX = H * (t.image.width / t.image.height); });
         const vid = document.createElement('video');
         vid.crossOrigin = 'anonymous'; vid.muted = true; vid.loop = true; vid.playsInline = true;
         vid.setAttribute('playsinline', ''); vid.preload = 'auto'; vid.src = g.src;
         vid.play().catch(() => {});
         const vt = new THREE.VideoTexture(vid); vt.colorSpace = THREE.SRGBColorSpace;
-        mat.map = vt; mat.color.set(0xffffff); mat.needsUpdate = true;
+        vid.addEventListener('loadedmetadata', () => { if (vid.videoWidth) mesh.userData.aspectX = H * (vid.videoWidth / vid.videoHeight); });
+        vid.addEventListener('playing', () => { mat.map = vt; mat.color.set(0xffffff); mat.needsUpdate = true; });
+        mat.color.set(0xffffff);
         wallVideos.push(vid);
       } else {
-        loader.load(g.src, (t) => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; mat.map = t; mat.color.set(0xffffff); mat.needsUpdate = true; });
+        loader.load(g.src, (t) => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; mat.map = t; mat.color.set(0xffffff); mat.needsUpdate = true; if (t.image) mesh.userData.aspectX = H * (t.image.width / t.image.height); });
       }
       const mesh = new THREE.Mesh(geo, mat);
       const bx = (col - 2.5) * spX + rnd(-0.28, 0.28);
       const by = (1 - row) * spY + rnd(-0.35, 0.35);
       const bz = rnd(-1.6, 1.4);
       mesh.position.set(bx, by, bz);
-      mesh.userData = { g, base: { x: bx, y: by, z: bz }, lift: 0, tLift: 0, scale: 1, tScale: 1, op: 1, tOp: 1, phase: rnd(0, 6.28), visible: true };
+      mesh.userData = { g, base: { x: bx, y: by, z: bz }, aspectX: 1.55, lift: 0, tLift: 0, scale: 1, tScale: 1, op: 1, tOp: 1, phase: rnd(0, 6.28), visible: true };
       group.add(mesh);
       tiles.push(mesh);
     });
@@ -152,7 +157,7 @@ export default function Wall({ active, filter, setFilter, onOpenDetail, onOpenRe
         m.position.x = u.base.x;
         m.position.y = u.base.y + bob;
         m.position.z = u.base.z + u.lift;
-        m.scale.set(u.scale, u.scale, 1);
+        m.scale.set(u.scale * (u.aspectX || 1.55), u.scale, 1);
         m.material.opacity = u.op;
       });
       if (hovered && ent) {

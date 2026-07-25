@@ -9,6 +9,9 @@ import Studio from './components/Studio.jsx';
 import Services from './components/Services.jsx';
 import Contact from './components/Contact.jsx';
 import { DetailPanel, Lightbox, ReelModal } from './components/Overlays.jsx';
+import MusicToggle from './components/MusicToggle.jsx';
+import { startMusic, stopMusic } from './music.js';
+import { useEffect } from 'react';
 
 export default function App() {
   const [view, setView] = useState('wall');
@@ -20,6 +23,12 @@ export default function App() {
   const [reel, setReel] = useState(null);         // film object
 
   const go = useCallback((v) => (e) => { if (e && e.preventDefault) e.preventDefault(); setView(v); }, []);
+
+  useEffect(() => {
+    if (view === 'galleries') startMusic('gallery');
+    else if (view === 'visualart') startMusic('art');
+    else stopMusic();
+  }, [view]);
   const openLightbox = useCallback((p) => setLightbox(ALL_IMAGES.findIndex((x) => x.src === p.src)), []);
   const stepLightbox = useCallback((d) => setLightbox((i) => (i + d + ALL_IMAGES.length) % ALL_IMAGES.length), []);
 
@@ -50,6 +59,7 @@ export default function App() {
         <Lightbox photo={ALL_IMAGES[lightbox]} onClose={() => setLightbox(-1)} onPrev={() => stepLightbox(-1)} onNext={() => stepLightbox(1)} />
       )}
       {reel && <ReelModal film={reel} onClose={() => setReel(null)} />}
+      {(view === 'galleries' || view === 'visualart') && <MusicToggle view={view} />}
     </div>
   );
 }

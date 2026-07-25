@@ -7,10 +7,10 @@ export default function VisualArt({ artFilter, setArtFilter, onOpen }) {
     <div className="view">
       <div className="wrap">
         <div className="eyebrow">Visual Art</div>
-        <h1 className="h1">Skin as canvas</h1>
+        <h1 className="h1">Skin, canvas &amp; colour</h1>
         <p className="lead">
-          Face and body painting, makeup art and conceptual portraiture — where the studio becomes a
-          gallery and the subject becomes the artwork.
+          A body of work beyond the lens — face and body painting, makeup artistry, and original
+          acrylic paintings on canvas. Where the studio becomes a gallery and colour is the language.
         </p>
         <div className="chips" style={{ marginBottom: 44 }}>
           {ART_CATS.map((c) => (
