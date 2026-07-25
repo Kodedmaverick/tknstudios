@@ -43,15 +43,15 @@ input, textarea, select, button { font-family: inherit; }
 .app { position: fixed; inset: 0; overflow: hidden; background: var(--bg); }
 
 /* ---------- Nav ---------- */
-.nav {
-  position: absolute; top: 0; left: 0; right: 0; z-index: 40;
-  display: flex; align-items: center; justify-content: space-between;
+.nav { position: absolute; top: 0; left: 0; right: 0; z-index: 40;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: nowrap;
   padding: 22px 40px;
   background: rgba(8,7,5,.42);
   backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid rgba(201,162,74,.12);
 }
-.nav-logo { display: flex; align-items: center; gap: 14px; cursor: pointer; }
+.nav > * { flex-shrink: 0; }
+.nav-logo { display: flex; align-items: center; gap: 14px; cursor: pointer; position: relative; z-index: 41; -webkit-tap-highlight-color: transparent; touch-action: manipulation; white-space: nowrap; }
 .nav-logo .mark { font-family: var(--serif); font-weight: 600; font-size: 26px; letter-spacing: .04em; }
 .nav-logo .div { width: 1px; height: 20px; background: rgba(242,239,233,.25); }
 .nav-logo .sub { font-family: var(--mono); font-size: 10px; letter-spacing: .32em; text-transform: uppercase; color: rgba(242,239,233,.5); }
@@ -59,7 +59,7 @@ input, textarea, select, button { font-family: inherit; }
 .nav-links a { color: rgba(242,239,233,.62); padding-bottom: 3px; border-bottom: 1px solid transparent; transition: color .3s ease, border-color .3s ease; }
 .nav-links a:hover { color: var(--ink); }
 .nav-links a.active { color: var(--gold-hi); border-bottom-color: rgba(201,162,74,.7); }
-.rnav-burger { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 40px; height: 40px; background: transparent; border: none; cursor: pointer; padding: 0; }
+.rnav-burger { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 40px; height: 40px; background: transparent; border: none; cursor: pointer; padding: 0; position: relative; z-index: 41; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 .rnav-burger span { display: block; width: 22px; height: 1.5px; background: var(--ink); }
 @media (max-width: 768px) { .rnav-links { display: none !important; } .rnav-burger { display: flex !important; } }
 

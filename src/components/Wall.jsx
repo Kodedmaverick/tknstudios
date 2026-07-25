@@ -25,8 +25,10 @@ export default function Wall({ active, filter, setFilter, onOpenDetail, onOpenRe
     const camera = new THREE.PerspectiveCamera(48, W / Hh, 0.1, 100);
     camera.position.set(0, 0, 20);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    const isMobile = matchMedia('(max-width:768px)').matches || matchMedia('(pointer:coarse)').matches;
+    renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2));
     renderer.setSize(W, Hh);
+    renderer.domElement.style.touchAction = 'none';
     host.appendChild(renderer.domElement);
 
     const group = new THREE.Group();
@@ -41,7 +43,7 @@ export default function Wall({ active, filter, setFilter, onOpenDetail, onOpenRe
     // Shuffle images so categories aren't grouped, then sprinkle in video tiles.
     const imgs = [...PHOTOS, ...VISUAL_ART];
     for (let a = imgs.length - 1; a > 0; a--) { const b = Math.floor(Math.random() * (a + 1)); [imgs[a], imgs[b]] = [imgs[b], imgs[a]]; }
-    const videoPicks = WALL_VIDEOS.filter(Boolean).map((f) => ({ ...f, isVideo: true, cat: f.type, color: '#14100b' }));
+    const videoPicks = isMobile ? [] : WALL_VIDEOS.filter(Boolean).map((f) => ({ ...f, isVideo: true, cat: f.type, color: '#14100b' }));
     const items = imgs.slice();
     videoPicks.forEach((v, k) => { items.splice(Math.min(items.length, 3 + k * 7 + Math.floor(Math.random() * 3)), 0, v); });
 
@@ -75,6 +77,7 @@ export default function Wall({ active, filter, setFilter, onOpenDetail, onOpenRe
     let hovered = null, dragging = false, moved = false, lastX = 0, lastY = 0, downX = 0, downY = 0;
     const gt = { x: 0, y: 0 };
     let zoomTarget = 20, camZ = 20, autoT = 0;
+    const dragK = isMobile ? 0.02 : 0.012, wheelK = isMobile ? 0.016 : 0.01, lerpK = isMobile ? 0.16 : 0.06;
     let raf = null, paused = false;
     const el = renderer.domElement;
 
@@ -85,8 +88,8 @@ export default function Wall({ active, filter, setFilter, onOpenDetail, onOpenRe
       if (dragging) {
         const dx = e.clientX - lastX, dy = e.clientY - lastY;
         if (Math.abs(e.clientX - downX) + Math.abs(e.clientY - downY) > 5) moved = true;
-        gt.x = Math.max(-7, Math.min(7, gt.x + dx * 0.012));
-        gt.y = Math.max(-6, Math.min(6, gt.y - dy * 0.012));
+        gt.x = Math.max(-7, Math.min(7, gt.x + dx * dragK));
+        gt.y = Math.max(-6, Math.min(6, gt.y - dy * dragK));
         lastX = e.clientX; lastY = e.clientY;
       }
     };
@@ -102,8 +105,8 @@ export default function Wall({ active, filter, setFilter, onOpenDetail, onOpenRe
     const onWheel = (e) => {
       e.preventDefault();
       if (e.ctrlKey || e.metaKey) { zoomTarget = Math.max(9, Math.min(19, zoomTarget + e.deltaY * 0.02)); return; }
-      gt.x = Math.max(-7, Math.min(7, gt.x - e.deltaX * 0.01));
-      gt.y = Math.max(-6, Math.min(6, gt.y - e.deltaY * 0.01));
+      gt.x = Math.max(-7, Math.min(7, gt.x - e.deltaX * wheelK));
+      gt.y = Math.max(-6, Math.min(6, gt.y - e.deltaY * wheelK));
     };
     el.addEventListener('pointerdown', onDown);
     window.addEventListener('pointermove', onMove);
@@ -126,8 +129,8 @@ export default function Wall({ active, filter, setFilter, onOpenDetail, onOpenRe
       autoT += 0.016;
       camZ += (zoomTarget - camZ) * 0.05; camera.position.z = camZ;
       if (!ent) { gt.x = Math.sin(autoT * 0.12) * 0.9; gt.y = Math.cos(autoT * 0.09) * 0.5; }
-      group.position.x += (gt.x - group.position.x) * 0.06;
-      group.position.y += (gt.y - group.position.y) * 0.06;
+      group.position.x += (gt.x - group.position.x) * lerpK;
+      group.position.y += (gt.y - group.position.y) * lerpK;
       if (ent && !dragging) {
         ray.setFromCamera(pointer, camera);
         const hits = ray.intersectObjects(tiles).filter((h) => h.object.userData.visible);

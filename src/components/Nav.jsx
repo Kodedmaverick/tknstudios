@@ -6,7 +6,7 @@ export default function Nav({ nav, view, go }) {
 
   return (
     <>
-      <nav className="rnav">
+      <nav className="nav rnav">
         <div className="nav-logo" onClick={pick('wall')}>
           <span className="mark">TKN</span>
           <span className="div" />
