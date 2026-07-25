@@ -40,13 +40,15 @@ export function Lightbox({ photo, onClose, onPrev, onNext }) {
   );
 }
 
-export function ReelModal({ onClose }) {
+export function ReelModal({ film, onClose }) {
   return (
     <div className="overlay reel" onClick={onClose}>
-      <div className="reel-frame" onClick={(e) => e.stopPropagation()}>
-        <div className="ring"><i /></div>
-        <div className="t">Showreel goes here</div>
-        <p>Drop in a Vimeo / YouTube embed or an MP4 and it will play in this frame. Placeholder for now.</p>
+      <div className="reel-player" onClick={(e) => e.stopPropagation()}>
+        <video src={film.src} controls autoPlay muted playsInline className={film.rotate ? 'rotated' : ''} />
+        <div style={{ marginTop: 16, textAlign: 'center' }}>
+          <div style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 26 }}>{film.title}</div>
+          <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 10, letterSpacing: '.28em', textTransform: 'uppercase', color: '#c9a24a', marginTop: 6 }}>{film.type} · {film.year}</div>
+        </div>
       </div>
       <button className="reel-close" onClick={onClose}>×</button>
     </div>

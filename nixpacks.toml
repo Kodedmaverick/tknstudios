@@ -1,12 +1,17 @@
+# Nixpacks build config for TKN Studios (Vite + React static site).
+# Builds to /dist and serves it statically. Works on Railway, Coolify, and any
+# Nixpacks-based host. `npm run preview` is Vite's static server bound to $PORT.
+
+providers = ["node"]
+
 [phases.setup]
 nixPkgs = ["nodejs_20"]
 
 [phases.install]
-cmds = ["npm install"]
+cmds = ["npm ci"]
 
 [phases.build]
 cmds = ["npm run build"]
 
-# No [start] section needed here — in Dokploy, set "Publish Directory" to
-# "dist" in the app's Build settings. Dokploy will then serve the built
-# static files via an NGINX-optimized container instead of running Node.
+[start]
+cmd = "npm run preview -- --host 0.0.0.0 --port $PORT"

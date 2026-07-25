@@ -1,6 +1,7 @@
 // TKN Studios — content data. Swap `src` values for real files in /public/photos.
 
 export const CATS = ['All', 'Portraits', 'Fashion', 'Beauty', 'Editorial', 'Glamour'];
+export const ART_CATS = ['All', 'Face Painting', 'Body Art', 'Makeup Art'];
 
 const raw = [
   { src: '/photos/p01.jpg', cat: 'Beauty',    title: 'Gilded',      year: '2024', location: 'TKN Studio, Lagos', mood: 'Warm · Radiant',    color: '#c9a24a', client: 'Studio Editorial' },
@@ -27,14 +28,54 @@ export const PHOTOS = raw.map((p, i) => ({
   desc: `${p.title} — a ${p.mood.toLowerCase()} study in ${p.cat.toLowerCase()}, made in the TKN studio where light is shaped slowly and colour is graded with intent. One frame from a larger sitting.`,
 }));
 
-export const FILMS = [
-  { src: '/photos/p06.jpg', title: 'The Vows',        type: 'Wedding Film', duration: '4:12', year: '2024' },
-  { src: '/photos/p02.jpg', title: 'Gilded — Motion', type: 'Fashion Film', duration: '1:48', year: '2024' },
-  { src: '/photos/p07.jpg', title: 'Founders',        type: 'Brand Film',   duration: '2:30', year: '2024' },
-  { src: '/photos/p17.jpg', title: 'Crimson',         type: 'Beauty Film',  duration: '0:58', year: '2024' },
-  { src: '/photos/p11.jpg', title: 'Golden Hour',     type: 'Short Cinema', duration: '3:20', year: '2023' },
-  { src: '/photos/p15.jpg', title: 'The Launch',      type: 'Event Film',   duration: '2:05', year: '2024' },
+const art = [
+  { src: '/photos/va01.jpg', title: 'Silver Strokes', mood: 'Graphic · Joyful',    color: '#3a4652', client: 'Face Painting' },
+  { src: '/photos/va02.jpg', title: 'Gilded Bloom',   mood: 'Regal · Ornate',      color: '#7a5a2a', client: 'Face Painting' },
+  { src: '/photos/va03.jpg', title: 'Cowrie Mark',    mood: 'Ancestral · Bold',    color: '#4a4038', client: 'Face Painting' },
+  { src: '/photos/va04.jpg', title: 'Poured Colour',  mood: 'Fluid · Vivid',       color: '#8a5a2a', client: 'Face Painting' },
+  { src: '/photos/va05.jpg', title: 'Bronze Tears',   mood: 'Dramatic · Dark',     color: '#6b4a1f', client: 'Face Painting' },
+  { src: '/photos/va06.jpg', title: 'Gold Repose',    mood: 'Serene · Luxe',       color: '#1f4a55', client: 'Face Painting' },
+  { src: '/photos/va07.jpg', title: 'Two Faces',      mood: 'Duality · Striking',  color: '#6b2530', client: 'Face Painting' },
+  { src: '/photos/va08.jpg', title: 'Crystal Skin',   mood: 'Ethereal · Neon',     color: '#3a2a55', client: 'Body Art' },
+  { src: '/photos/va09.jpg', title: 'Cobalt Profile', mood: 'Luminous · Deep',     color: '#2a2a6b', client: 'Body Art' },
+  { src: '/photos/va10.jpg', title: 'Split Muse',     mood: 'Bold · Editorial',    color: '#2a4a5a', client: 'Makeup Art' },
+  { src: '/photos/va11.jpg', title: 'Adire Markings', mood: 'Cultural · Radiant',  color: '#6b5a2a', client: 'Body Art' },
 ];
+
+export const VISUAL_ART = art.map((p, i) => ({
+  ...p,
+  cat: 'Visual Art',
+  year: '2025',
+  location: 'TKN Studio, Lagos',
+  num: String(i + 1).padStart(2, '0'),
+  desc: `${p.title} — visual art, ${p.mood.toLowerCase()}, conceived and shot at TKN Studio. Skin and colour as canvas.`,
+}));
+
+// Combined list used only for lightbox indexing (gallery + visual art).
+export const ALL_IMAGES = [...PHOTOS, ...VISUAL_ART];
+
+// Films are hosted on Cloudflare R2. .mov clips play in Safari/iOS; re-encode to mp4 for universal playback.
+const VBASE = 'https://pub-25f54ab903ac4942ab8aa664c34f7be2.r2.dev/videos/';
+const films = [
+  { file: 'treasure%20blue%20home%20landscape(1).mov',    title: 'Treasure',           type: 'Cinematic Film', year: '2025', rotate: true },
+  { file: 'OGE%20BRIDE%20PERSONAL.mp4',                   title: 'Oge — The Bride',    type: 'Wedding Film',   year: '2025' },
+  { file: 'ODO%20HALIMAH%20BRIDE%20EDIT%202.mov',         title: 'Halimah — Odo',      type: 'Wedding Film',   year: '2025' },
+  { file: 'HALIMAH%20BRIDE%20PERSONAL%20EDIT%203.mov',    title: 'Halimah — Personal', type: 'Bridal Film',    year: '2025' },
+  { file: 'edo%20thelma%20.mov',                          title: 'Thelma — Edo',       type: 'Bridal Film',    year: '2025' },
+  { file: 'shushu%20pink%20edit%20dec.mp4',               title: 'Shushu — Pink',      type: 'Fashion Film',   year: '2025' },
+  { file: 'SHUSHU%20OJUDE%20OBA%20EDIT.mov',              title: 'Shushu — Ojude Oba', type: 'Cultural Film',  year: '2025' },
+  { file: 'SHUSHU%20BOF%20EID%20PARTY%202.mov',           title: 'Shushu — Eid Party', type: 'Event Film',     year: '2025' },
+  { file: 'RAYO%20%40%2016%20PERSONA%202.mov',            title: 'Rayo at 16',         type: 'Persona Film',   year: '2025' },
+  { file: 'BOF%20PARTY%203.mov',                          title: 'BOF — The Party',    type: 'Event Film',     year: '2025' },
+  { file: 'BOF%20FOUNDATION%20VIDEO.mov',                 title: 'BOF Foundation',     type: 'Brand Film',     year: '2025' },
+  { file: 'copy_C5520809-7D07-414E-ACE9-4BBC51AEB0A7.mov', title: 'Studio Story I',    type: 'Short Cinema',   year: '2025' },
+  { file: 'copy_24839763-5770-43F7-89F5-21D167EAC124.mov', title: 'Studio Story II',   type: 'Short Cinema',   year: '2025' },
+  { file: '1214.mp4',                                     title: 'Frame 1214',         type: 'Short Cinema',   year: '2025' },
+];
+export const FILMS = films.map((f) => ({ ...f, src: VBASE + f.file }));
+
+// mp4 films make the smoothest wall/preview textures across browsers.
+export const WALL_VIDEOS = [FILMS[1], FILMS[5], FILMS[13]];
 
 export const SERVICES = [
   { no: '01', title: 'Portrait Sessions',   body: 'Studio and location portraiture — individuals, couples and families. Single-light drama or soft natural warmth.', meta: 'Studio · 1–2 hrs' },
@@ -42,7 +83,7 @@ export const SERVICES = [
   { no: '03', title: 'Beauty',              body: 'Close, luminous beauty work — skin, colour and detail rendered with a retoucher’s eye.', meta: 'Studio · half day' },
   { no: '04', title: 'Weddings & Events',   body: 'Documentary coverage that stays out of the way — the real moments, honestly kept, beautifully finished.', meta: 'Full day + film' },
   { no: '05', title: 'Cinematic Films',     body: 'Brand films, fashion motion and wedding cinema — shot and edited in-house with a filmic grade.', meta: 'By project' },
-  { no: '06', title: 'Brand & Commercial',  body: 'Founder portraits, product and identity imagery built to scale consistently across a company.', meta: 'Retainer / project' },
+  { no: '06', title: 'Visual Art',          body: 'Face and body painting, makeup art and conceptual portraiture — the studio as gallery, the subject as artwork.', meta: 'By project' },
 ];
 
 export const STEPS = [
@@ -53,6 +94,30 @@ export const STEPS = [
 ];
 
 export const NAV = [
-  ['Work', 'wall'], ['Gallery', 'galleries'], ['Films', 'films'],
+  ['Work', 'wall'], ['Gallery', 'galleries'], ['Films', 'films'], ['Visual Art', 'visualart'],
   ['Studio', 'studio'], ['Services', 'services'], ['Contact', 'contact'],
 ];
+
+// A short synthesized "swoosh" — no audio asset needed. Call on Enter.
+export function playSwoosh() {
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    const ctx = playSwoosh._ctx || (playSwoosh._ctx = new AC());
+    if (ctx.state === 'suspended') ctx.resume();
+    const t0 = ctx.currentTime, dur = 0.62, sr = ctx.sampleRate;
+    const buf = ctx.createBuffer(1, Math.floor(sr * dur), sr), d = buf.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    const src = ctx.createBufferSource(); src.buffer = buf;
+    const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 0.9;
+    bp.frequency.setValueAtTime(320, t0);
+    bp.frequency.exponentialRampToValueAtTime(4200, t0 + 0.26);
+    bp.frequency.exponentialRampToValueAtTime(480, t0 + dur);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(0.3, t0 + 0.11);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    src.connect(bp); bp.connect(g); g.connect(ctx.destination);
+    src.start(t0); src.stop(t0 + dur);
+  } catch (e) { /* no-op */ }
+}

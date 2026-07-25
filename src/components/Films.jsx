@@ -5,16 +5,24 @@ export default function Films({ onPlay }) {
   const year = new Date().getFullYear();
   return (
     <div className="view">
-      <div className="film-hero">
-        <img src={hero.src} alt="showreel" />
+      <div className="film-hero film-hero-wrap">
+        <video
+          className={hero.rotate ? 'film-hero-video rotated' : 'film-hero-video'}
+          src={hero.src}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+        />
         <div className="scrim" />
-        <div className="play-big" onClick={onPlay}>
+        <div className="play-big" onClick={() => onPlay(hero)}>
           <div className="play-tri" />
         </div>
-        <div className="caption">
+        <div className="caption film-hero-inner">
           <div className="eyebrow">Cinematic Films</div>
           <h1>Motion, with the weight of memory</h1>
-          <p>Weddings, brand films and short cinema — shot and cut in-house. Press play for the {year} showreel.</p>
+          <p>Weddings, bridal cinema, brand and event films — shot and cut in-house. Tap any film below to watch.</p>
         </div>
       </div>
       <div className="wrap" style={{ paddingTop: 80 }}>
@@ -24,11 +32,10 @@ export default function Films({ onPlay }) {
         </div>
         <div className="film-grid">
           {FILMS.map((f) => (
-            <div key={f.title} className="film-card" onClick={onPlay}>
+            <div key={f.src} className="film-card" onClick={() => onPlay(f)}>
               <div className="film-poster">
-                <img src={f.src} alt={f.title} loading="lazy" />
+                <video src={f.src} muted loop playsInline preload="metadata" className={f.rotate ? 'rotated' : ''} />
                 <div className="play-sm-wrap"><div className="play-sm"><i /></div></div>
-                <div className="film-dur">{f.duration}</div>
               </div>
               <div className="film-meta">
                 <div>

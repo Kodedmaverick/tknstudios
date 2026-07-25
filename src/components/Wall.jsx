@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { PHOTOS, CATS } from '../data.js';
+import { PHOTOS, VISUAL_ART, WALL_VIDEOS, CATS, playSwoosh } from '../data.js';
 
-export default function Wall({ active, filter, setFilter, onOpenDetail }) {
+export default function Wall({ active, filter, setFilter, onOpenDetail, onOpenReel }) {
   const mountRef = useRef(null);
   const hoverRef = useRef(null);
   const apiRef = useRef(null);
@@ -10,11 +10,11 @@ export default function Wall({ active, filter, setFilter, onOpenDetail }) {
   const enteredRef = useRef(false);
   const [entered, setEntered] = useState(false);
 
-  // keep a live ref to onOpenDetail so the animation loop always calls the latest
-  const openRef = useRef(onOpenDetail);
-  openRef.current = onOpenDetail;
+  const openDetailRef = useRef(onOpenDetail);
+  openDetailRef.current = onOpenDetail;
+  const openReelRef = useRef(onOpenReel);
+  openReelRef.current = onOpenReel;
 
-  // ---- build the scene once ----
   useEffect(() => {
     const host = mountRef.current;
     if (!host) return;
@@ -33,18 +33,33 @@ export default function Wall({ active, filter, setFilter, onOpenDetail }) {
     scene.add(group);
 
     const tiles = [];
+    const wallVideos = [];
     const cols = 6, spX = 2.55, spY = 3.15;
     const rnd = (a, b) => a + Math.random() * (b - a);
     const loader = new THREE.TextureLoader();
 
-    PHOTOS.forEach((g, i) => {
+    // Shuffle images so categories aren't grouped, then sprinkle in video tiles.
+    const imgs = [...PHOTOS, ...VISUAL_ART];
+    for (let a = imgs.length - 1; a > 0; a--) { const b = Math.floor(Math.random() * (a + 1)); [imgs[a], imgs[b]] = [imgs[b], imgs[a]]; }
+    const videoPicks = WALL_VIDEOS.filter(Boolean).map((f) => ({ ...f, isVideo: true, cat: f.type, color: '#14100b' }));
+    const items = imgs.slice();
+    videoPicks.forEach((v, k) => { items.splice(Math.min(items.length, 3 + k * 7 + Math.floor(Math.random() * 3)), 0, v); });
+
+    items.forEach((g, i) => {
       const col = i % cols, row = Math.floor(i / cols);
       const geo = new THREE.PlaneGeometry(1.55, 1.98);
-      const mat = new THREE.MeshBasicMaterial({ color: new THREE.Color(g.color), transparent: true, opacity: 1 });
-      loader.load(g.src, (t) => {
-        t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4;
-        mat.map = t; mat.color.set(0xffffff); mat.needsUpdate = true;
-      });
+      const mat = new THREE.MeshBasicMaterial({ color: new THREE.Color(g.color || '#14100b'), transparent: true, opacity: 1 });
+      if (g.isVideo) {
+        const vid = document.createElement('video');
+        vid.crossOrigin = 'anonymous'; vid.muted = true; vid.loop = true; vid.playsInline = true;
+        vid.setAttribute('playsinline', ''); vid.preload = 'auto'; vid.src = g.src;
+        vid.play().catch(() => {});
+        const vt = new THREE.VideoTexture(vid); vt.colorSpace = THREE.SRGBColorSpace;
+        mat.map = vt; mat.color.set(0xffffff); mat.needsUpdate = true;
+        wallVideos.push(vid);
+      } else {
+        loader.load(g.src, (t) => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; mat.map = t; mat.color.set(0xffffff); mat.needsUpdate = true; });
+      }
       const mesh = new THREE.Mesh(geo, mat);
       const bx = (col - 2.5) * spX + rnd(-0.28, 0.28);
       const by = (1 - row) * spY + rnd(-0.35, 0.35);
@@ -70,13 +85,26 @@ export default function Wall({ active, filter, setFilter, onOpenDetail }) {
       if (dragging) {
         const dx = e.clientX - lastX, dy = e.clientY - lastY;
         if (Math.abs(e.clientX - downX) + Math.abs(e.clientY - downY) > 5) moved = true;
-        gt.x = Math.max(-4, Math.min(4, gt.x + dx * 0.012));
-        gt.y = Math.max(-3, Math.min(3, gt.y - dy * 0.012));
+        gt.x = Math.max(-7, Math.min(7, gt.x + dx * 0.012));
+        gt.y = Math.max(-6, Math.min(6, gt.y - dy * 0.012));
         lastX = e.clientX; lastY = e.clientY;
       }
     };
-    const onUp = () => { host.style.cursor = 'grab'; if (dragging && !moved && enteredRef.current && hovered) openRef.current(hovered.userData.g); dragging = false; };
-    const onWheel = (e) => { e.preventDefault(); zoomTarget = Math.max(9, Math.min(19, zoomTarget + e.deltaY * 0.012)); };
+    const onUp = () => {
+      host.style.cursor = 'grab';
+      if (dragging && !moved && enteredRef.current && hovered) {
+        const g = hovered.userData.g;
+        if (g.isVideo) openReelRef.current(g); else openDetailRef.current(g);
+      }
+      dragging = false;
+    };
+    // Scroll to navigate the wall; ctrl/cmd-scroll to zoom.
+    const onWheel = (e) => {
+      e.preventDefault();
+      if (e.ctrlKey || e.metaKey) { zoomTarget = Math.max(9, Math.min(19, zoomTarget + e.deltaY * 0.02)); return; }
+      gt.x = Math.max(-7, Math.min(7, gt.x - e.deltaX * 0.01));
+      gt.y = Math.max(-6, Math.min(6, gt.y - e.deltaY * 0.01));
+    };
     el.addEventListener('pointerdown', onDown);
     window.addEventListener('pointermove', onMove);
     window.addEventListener('pointerup', onUp);
@@ -86,12 +114,12 @@ export default function Wall({ active, filter, setFilter, onOpenDetail }) {
     const showCard = (m) => {
       if (!card) return;
       const g = m.userData.g;
-      card.innerHTML = `<div class="hc-cat">${g.cat} · ${g.year}</div><div class="hc-title">${g.title}</div><div class="hc-mood">${g.mood}</div><div class="hc-loc">${g.location}</div>`;
+      card.innerHTML = `<div class="hc-cat">${g.cat || g.type} · ${g.year}</div><div class="hc-title">${g.title}</div><div class="hc-mood">${g.isVideo ? 'Cinematic film · tap to play' : g.mood}</div><div class="hc-loc">${g.location || 'TKN Studios'}</div>`;
       card.style.opacity = '1';
     };
     const hideCard = () => { if (card) card.style.opacity = '0'; };
 
-    const tick = (now) => {
+    const tick = () => {
       if (paused) { raf = null; return; }
       raf = requestAnimationFrame(tick);
       const ent = enteredRef.current;
@@ -139,15 +167,14 @@ export default function Wall({ active, filter, setFilter, onOpenDetail }) {
 
     apiRef.current = {
       enter: () => { zoomTarget = 12.5; },
-      setFilter: (c) => tiles.forEach((m) => { m.userData.visible = c === 'All' || m.userData.g.cat === c; }),
+      setFilter: (c) => tiles.forEach((m) => { const g = m.userData.g; m.userData.visible = c === 'All' || (g && g.cat === c); }),
       resize: () => {
         W = host.clientWidth || window.innerWidth; Hh = host.clientHeight || window.innerHeight;
         if (!W || !Hh) return;
         camera.aspect = W / Hh; camera.updateProjectionMatrix(); renderer.setSize(W, Hh);
       },
-      resume: () => { if (!raf && !paused) { raf = requestAnimationFrame(tick); } },
-      pause: () => { paused = true; if (raf) cancelAnimationFrame(raf); raf = null; },
-      play: () => { paused = false; if (!raf) raf = requestAnimationFrame(tick); },
+      pause: () => { paused = true; if (raf) cancelAnimationFrame(raf); raf = null; wallVideos.forEach((v) => v.pause()); },
+      play: () => { paused = false; wallVideos.forEach((v) => v.play().catch(() => {})); if (!raf) raf = requestAnimationFrame(tick); },
     };
 
     paused = false;
@@ -162,6 +189,7 @@ export default function Wall({ active, filter, setFilter, onOpenDetail }) {
       el.removeEventListener('pointerdown', onDown);
       el.removeEventListener('wheel', onWheel);
       if (raf) cancelAnimationFrame(raf);
+      wallVideos.forEach((v) => { v.pause(); v.src = ''; });
       tiles.forEach((m) => { m.geometry.dispose(); if (m.material.map) m.material.map.dispose(); m.material.dispose(); });
       renderer.dispose();
       if (el.parentNode) el.parentNode.removeChild(el);
@@ -169,7 +197,6 @@ export default function Wall({ active, filter, setFilter, onOpenDetail }) {
     };
   }, []);
 
-  // pause / resume with active
   useEffect(() => {
     activeRef.current = active;
     const api = apiRef.current;
@@ -178,13 +205,10 @@ export default function Wall({ active, filter, setFilter, onOpenDetail }) {
     else api.pause();
   }, [active]);
 
-  // filter tiles
   useEffect(() => { apiRef.current && apiRef.current.setFilter(filter); }, [filter]);
-
-  // entered → dolly in + reveal
   useEffect(() => { enteredRef.current = entered; if (entered && apiRef.current) apiRef.current.enter(); }, [entered]);
 
-  const onEnter = () => setEntered(true);
+  const onEnter = () => { playSwoosh(); setEntered(true); };
 
   return (
     <div className="wall" style={{ display: active ? 'block' : 'none' }}>
@@ -199,14 +223,14 @@ export default function Wall({ active, filter, setFilter, onOpenDetail }) {
         ))}
       </div>
 
-      <div className="wall-hint" style={{ opacity: entered ? 0 : 0 }}>Drag to explore · Scroll to zoom · Click to open</div>
+      <div className="wall-hint" style={{ opacity: 0 }}>Drag or scroll to explore · ⌘/Ctrl-scroll to zoom · Click to open</div>
 
       {!entered && (
         <div className="hero">
-          <div className="hero-eyebrow">Photography · Cinematic Films</div>
+          <div className="hero-eyebrow">Photography · Cinematic Films · Visual Art</div>
           <h1 className="hero-h1">Every frame<br /><em>becomes</em> timeless</h1>
           <div className="hero-rule" />
-          <p className="hero-p">A visual studio by <b>Adesola Adedayo</b> — portraits, fashion and cinematic stories composed with light, colour and intention.</p>
+          <p className="hero-p">A visual studio by <b>Adesola Adedayo</b> — portraits, fashion, cinematic stories and visual art composed with light, colour and intention.</p>
           <button className="hero-cta" onClick={onEnter}>Enter the Gallery</button>
         </div>
       )}

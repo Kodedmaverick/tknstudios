@@ -1,7 +1,7 @@
-import { CATS } from '../data.js';
+import { CATS, PHOTOS } from '../data.js';
 
 export default function Galleries({ galFilter, setGalFilter, onOpen }) {
-  const shown = PHOTOSByFilter(galFilter);
+  const shown = PHOTOS.filter((p) => galFilter === 'All' || p.cat === galFilter);
   return (
     <div className="view">
       <div className="wrap">
@@ -18,6 +18,7 @@ export default function Galleries({ galFilter, setGalFilter, onOpen }) {
             </button>
           ))}
         </div>
+
         <div className="masonry">
           {shown.map((ph) => (
             <div key={ph.src} className="tile" onClick={() => onOpen(ph)}>
@@ -32,9 +33,4 @@ export default function Galleries({ galFilter, setGalFilter, onOpen }) {
       </div>
     </div>
   );
-}
-
-import { PHOTOS } from '../data.js';
-function PHOTOSByFilter(f) {
-  return PHOTOS.filter((p) => f === 'All' || p.cat === f);
 }
