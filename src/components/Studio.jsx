@@ -12,12 +12,11 @@ export default function Studio() {
         </div>
         <div className="ed-hero">
           <div>
-            <div className="eyebrow">Creative Director · Makeup HOD</div>
+            <div className="eyebrow">Creative Director</div>
             <h1 className="ed-title">The man behind<br /><span>the character</span></h1>
             <p className="ed-standfirst">A decade shaping the faces of Nigeria and South Africa's biggest screens and stages — from Netflix features to sold-out theatre and prime-time television.</p>
             <div className="ed-social">
               <a href="https://www.instagram.com/thekingnathystudios/" target="_blank" rel="noreferrer">@thekingnathystudios ↗</a>
-              <a href="https://www.instagram.com/axpn_world/" target="_blank" rel="noreferrer">@axpn_world ↗</a>
             </div>
           </div>
           <div className="ed-portrait">
