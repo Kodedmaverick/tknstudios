@@ -110,6 +110,52 @@ export const SERVICES = [
   { no: '06', title: 'Visual Art',          body: 'Face and body painting, makeup art and conceptual portraiture — the studio as gallery, the subject as artwork.', meta: 'By project' },
 ];
 
+export const CREDITS = [
+  { role: 'Lead Photographer · Videographer · Makeup Artist', title: 'BAP Productions', note: 'Bolanle Austen-Peters Productions — Nigeria & Pretoria, South Africa. Character makeup design, promotional imagery and visual storytelling across multiple theatrical shows.' },
+  { role: 'Lead Makeup Artist', title: 'My Boyfriend Calls Me Ma', note: 'BAP production, directed by Bolanle Austen-Peters — ensuring character consistency and stage-ready looks. Staged at Lagos International Theatre Festival.' },
+  { role: 'Official Makeup Artist', title: 'Chop It Up', note: 'MTN cooking competition series — on-screen looks for the entire cast, hosts and production team.' },
+  { role: 'Official Makeup Artist', title: 'Lagos International Theatre Festival', note: "Africa's premier theatre festival — working with local and international performers and directors to develop performance-specific looks." },
+  { role: 'Art Director', title: 'The Voice Nigeria & The Voice Africa', note: 'Overseeing visual themes, stage aesthetics, makeup direction and overall show presentation.' },
+  { role: 'Art Director', title: 'Gulder Ultimate Search', note: 'Visual concept, stylistic coherence and thematic direction for the iconic reality adventure series.' },
+];
+
+export const PRODUCTIONS = [
+  { src: '/photos/prod01.jpg', cap: 'BAP Productions · Company' },
+  { src: '/photos/prod02.jpg', cap: 'My Boyfriend Calls Me Ma · LITF' },
+  { src: '/photos/prod03.jpg', cap: "Lagos Int'l Theatre Festival 2025" },
+  { src: '/photos/prod06.jpg', cap: 'Dear Kaffy · South African State Theatre' },
+  { src: '/photos/prod05.jpg', cap: 'Chop It Up · MTN' },
+  { src: '/photos/prod04.jpg', cap: "Lagos Int'l Theatre Festival 2024" },
+];
+
+export const SPECIALISMS = ['Character & theatrical makeup', 'On-set makeup for film/TV', 'Video & photo production', 'Art direction'];
+
+export const FEATURED = [
+  { src: '/photos/ed_voiceafrica.jpg', kicker: 'Art Director · Television', title: 'The Voice Nigeria & The Voice Africa', tag: 'Prime-time TV', desc: 'Art Director across West Africa’s biggest music competition — shaping the visual identity, stage aesthetics, coach styling and makeup direction seen by millions.' },
+  { src: '/photos/ed_gus.jpg', kicker: 'Art Director · Reality TV', title: 'Gulder Ultimate Search', tag: 'National franchise', desc: '“The Age of Craftsmanship.” Art Director for the return of Nigeria’s most iconic reality adventure franchise — owning the visual concept, thematic direction and on-screen world.' },
+];
+
+export const SCREEN_WORK = [
+  { src: '/photos/ed_gaa.jpg',       title: "House of Ga'a",          meta: 'Period Film · BAP', tag: 'Netflix' },
+  { src: '/photos/ed_collision.jpg', title: 'Collision Course',       meta: 'A BAP Film',        tag: 'Netflix' },
+  { src: '/photos/ed_manofgod.jpg',  title: 'The Man of God',         meta: 'Feature Film',      tag: 'Cinema' },
+  { src: '/photos/ed_funmilayo.jpg', title: 'Funmilayo Ransome-Kuti', meta: 'Biopic Feature',    tag: 'Cinema' },
+  { src: '/photos/ed_ogeere.jpg',    title: 'Ogeere',                 meta: 'Feature Film',      tag: 'AMVCA ’23 · Houston' },
+];
+
+export const STAGE_WORK = [
+  { src: '/photos/ed_kaffy.jpg',     title: 'Dear Kaffy',                 meta: 'BAP · LITF · SA State Theatre' },
+  { src: '/photos/ed_boyfriend.jpg', title: 'My Boyfriend Calls Me Ma',   meta: 'BAP · LITF' },
+  { src: '/photos/ed_jero.jpg',      title: 'The Trials of Brother Jero', meta: 'Vesta Opera · Soyinka' },
+  { src: '/photos/ed_oluronbi.jpg',  title: 'The Olúrónbì Musical',        meta: 'BAP Musical' },
+  { src: '/photos/ed_manenough.jpg', title: 'Man Enough: The Final Show', meta: 'BAP Stage' },
+  { src: '/photos/ed_moremi.jpg',    title: 'Queen Moremi',               meta: 'The Musical' },
+  { src: '/photos/ed_bling.jpg',     title: 'The Bling Lagosians',        meta: 'BAP Stage Musical' },
+  { src: '/photos/ed_fela.jpg',      title: 'Fela and the Kalakuta',      meta: 'Stage Musical' },
+];
+
+export const LEDGER = ["Death and the King's Horseman", 'Motherland — The Musical', 'Chop It Up (MTN)', 'Lagos International Theatre Festival', 'The South African State Theatre', 'The Voice Nigeria & Africa'];
+
 export const STEPS = [
   { num: '01', title: 'Conversation', body: 'We start with your story, references and the feeling you want the images to carry.' },
   { num: '02', title: 'Direction',    body: 'Concept, styling, location and light — planned so the shoot day runs calm and unhurried.' },
